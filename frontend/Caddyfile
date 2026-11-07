@@ -1,5 +1,10 @@
-# DOMAIN از .env می‌آید. برای تست محلی خالی بماند تا روی localhost بالا بیاید.
-{$DOMAIN:localhost} {
+{
+	# با پورت‌های غیراستاندارد، ریدایرکت خودکار به ۴۴۳ اشتباه است؛ آدرس مینی‌اپ مستقیم HTTPS است
+	auto_https disable_redirects
+}
+
+# SITE_ADDRESS از .env می‌آید: دامنه (HTTPS خودکار) یا http://دامنه (پشت پروکسی دیگر، بدون TLS)
+{$SITE_ADDRESS:localhost} {
 	encode zstd gzip
 
 	header {

@@ -1,0 +1,19 @@
+node_modules/
+dist/
+bin/
+obj/
+*.db
+*.db-shm
+*.db-wal
+.DS_Store
+
+# تصاویر آپلودشده (کاور/بک‌دراپ فیلم‌ها)
+backend/DragonFlix.Api/wwwroot/uploads/movies/*
+!backend/DragonFlix.Api/wwwroot/uploads/movies/.gitkeep
+
+# اسرار و داده‌های خصوصی (توکن ربات، رسیدهای پرداخت)
+backend/DragonFlix.Api/appsettings.Local.json
+backend/DragonFlix.Api/App_Data/
+
+# تنظیمات و اسرار سرور
+.env

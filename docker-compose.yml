@@ -1,0 +1,46 @@
+# اجرا:  docker compose up -d --build        (روی سرور: docker compose pull && docker compose up -d)
+# تنظیمات از فایل .env خوانده می‌شود (نمونه: .env.example)
+
+services:
+  api:
+    image: ghcr.io/${GHCR_OWNER:-local}/dragonflix-api:${TAG:-latest}
+    build: ./backend/DragonFlix.Api
+    restart: unless-stopped
+    environment:
+      Jwt__Key: ${JWT_KEY:?JWT_KEY را در .env بگذارید}
+      Telegram__BotToken: ${BOT_TOKEN:?BOT_TOKEN را در .env بگذارید}
+      Telegram__WebAppUrl: https://${DOMAIN:?DOMAIN را در .env بگذارید}
+      Telegram__ApiBase: ${TELEGRAM_API_BASE:-https://api.telegram.org}
+      Tmdb__ApiKey: ${TMDB_API_KEY:-}
+      Cors__Origins__0: https://${DOMAIN}
+      TZ: ${TZ:-Asia/Tehran} # پشتیبان شبانهٔ ساعت ۱۲ و زمان‌های سانس بر اساس همین ساعت است
+    volumes:
+      - df_data:/data                  # دیتابیس SQLite
+      - df_appdata:/app/App_Data       # عکس رسیدهای پرداخت
+      - df_uploads:/app/wwwroot/uploads # کاور و بک‌دراپ فیلم‌ها
+    expose:
+      - "8080"
+
+  web:
+    image: ghcr.io/${GHCR_OWNER:-local}/dragonflix-web:${TAG:-latest}
+    build: ./frontend
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+    environment:
+      DOMAIN: ${DOMAIN}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - caddy_data:/data     # گواهی‌های HTTPS (حذفش نکنید)
+      - caddy_config:/config
+
+volumes:
+  df_data:
+  df_appdata:
+  df_uploads:
+  caddy_data:
+  caddy_config:

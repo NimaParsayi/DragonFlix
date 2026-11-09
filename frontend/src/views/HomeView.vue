@@ -48,7 +48,7 @@ const filtered = computed(() =>
     <div v-else class="hspace" aria-hidden="true" />
 
     <!-- فیلم‌ها -->
-    <div class="section-title"><h2>فیلم‌های روی پرده</h2></div>
+    <div class="section-title"><h2>فیلم‌های در حال اکران</h2></div>
 
     <div v-if="movies.length" class="toolbar">
       <div class="search">

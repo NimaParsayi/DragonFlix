@@ -41,6 +41,7 @@ onBeforeUnmount(() => { document.removeEventListener('keydown', onKey); document
           <div>
             <h2>{{ booking.movie }}</h2>
             <div class="muted">{{ booking.cinema }} · {{ booking.hall }}</div>
+            <div v-if="booking.buyer?.trim()" class="buyer">نام: <b>{{ booking.buyer.trim() }}</b></div>
           </div>
         </header>
 
@@ -82,6 +83,7 @@ onBeforeUnmount(() => { document.removeEventListener('keydown', onKey); document
 header { display: flex; gap: 14px; align-items: center; padding-inline-start: 26px; }
 .mini { width: 48px; flex: none; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
 h2 { margin: 0; font-size: 1.15rem; }
+.buyer { font-size: .9rem; color: #bcd3f7; }
 .when { display: grid; grid-template-columns: repeat(3, auto); justify-content: space-between; gap: 8px; }
 .when div { display: grid; line-height: 1.5; }
 .when b { font-size: .95rem; font-weight: 500; }

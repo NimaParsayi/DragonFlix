@@ -168,6 +168,7 @@ public class AdminCinemasController(AppDbContext db) : ControllerBase
         foreach (var r in dto.Rows)
         {
             if (string.IsNullOrWhiteSpace(r.Label)) return "نام هر ردیف الزامی است.";
+            if (r.Label.AsSpan().IndexOfAny(',', ':') >= 0) return "نام ردیف نباید شامل «،» یا «:» باشد.";
             if (!labels.Add(r.Label.Trim())) return $"نام ردیف «{r.Label}» تکراری است.";
             if (r.SeatCount is < 1 or > 60) return $"تعداد صندلی‌های ردیف {r.Label} باید بین ۱ تا ۶۰ باشد.";
             if (r.Price < 0) return $"قیمت ردیف {r.Label} نمی‌تواند منفی باشد.";

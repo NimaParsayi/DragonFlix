@@ -29,7 +29,7 @@ const now = ref(Date.now())
 
 const labelOf = (key) => {
   const [rid, n] = key.split(':').map(Number)
-  return `${st.value.rows.find((r) => r.id === rid)?.label}${n}`
+  return `${st.value.rows.find((r) => r.id === rid)?.label}-${n}`
 }
 
 // وضعیت سانس را از سرور می‌گیرد؛ هر چند ثانیه هم تکرار می‌شود تا رزرو و نگه‌داری دیگران زنده دیده شود.
@@ -128,7 +128,7 @@ const items = computed(() => {
     .map((k) => {
       const [rid, n] = k.split(':').map(Number)
       const r = byId[rid]
-      return { key: k, rowId: rid, number: n, label: `${r.label}${n}`, price: r.price, order: st.value.rows.indexOf(r) }
+      return { key: k, rowId: rid, number: n, label: `${r.label}:${n}`, price: r.price, order: st.value.rows.indexOf(r) }
     })
     .sort((a, b) => a.order - b.order || a.number - b.number)
 })

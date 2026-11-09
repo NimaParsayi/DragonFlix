@@ -46,6 +46,8 @@ public static class SchemaPatches
         AddColumn(db, "Users", "BotBlocked", "INTEGER NOT NULL DEFAULT 0");
         AddColumn(db, "Users", "NotifyPrefs", "TEXT NULL");
         AddColumn(db, "Users", "LastLoginAt", "TEXT NULL");
+        AddColumn(db, "Users", "RegFirstName", "TEXT NOT NULL DEFAULT ''");
+        AddColumn(db, "Users", "RegLastName", "TEXT NOT NULL DEFAULT ''");
         Exec(db, "CREATE UNIQUE INDEX IF NOT EXISTS \"IX_Users_TelegramId\" ON \"Users\" (\"TelegramId\")");
 
         // رزروهای قدیمی پیش از این قابلیت، پرداخت‌شده و قطعی بودند (پیش‌فرض Confirmed)
@@ -67,6 +69,14 @@ public static class SchemaPatches
                     SELECT group_concat(r."Label" || bs."SeatNumber", ',') FROM "BookedSeats" bs
                     JOIN "SeatRows" r ON r."Id" = bs."SeatRowId" WHERE bs."BookingId" = "Bookings"."Id"), '')
                 """);
+
+        // قالب بدون ابهام «ردیف:شماره»؛ وقتی نام ردیف عدد باشد «2»+«7» با «27» اشتباه گرفته می‌شد
+        Exec(db, """
+            UPDATE "Bookings" SET "SeatsText" = COALESCE((
+                SELECT group_concat(r."Label" || ':' || bs."SeatNumber", ',') FROM "BookedSeats" bs
+                JOIN "SeatRows" r ON r."Id" = bs."SeatRowId" WHERE bs."BookingId" = "Bookings"."Id"), "SeatsText")
+            WHERE "SeatsText" NOT LIKE '%:%' AND EXISTS (SELECT 1 FROM "BookedSeats" WHERE "BookingId" = "Bookings"."Id")
+            """);
 
         // فیلم‌هایی که از قبل سانس دارند «قبلاً اعلام‌شده» حساب می‌شوند تا اعلان اکران جدید الکی برای همه نرود
         var addedAnnounced = AddColumn(db, "Movies", "AnnouncedAt", "TEXT NULL");

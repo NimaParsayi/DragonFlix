@@ -1,4 +1,5 @@
 <script setup>
+import Brand from '../components/Brand.vue'
 import Icon from '../components/Icon.vue'
 import { auth } from '../lib/auth'
 import { botLink } from '../lib/tg'
@@ -6,13 +7,13 @@ import { botLink } from '../lib/tg'
 
 <template>
   <div class="gate card">
-    <img src="/logo-256.jpg" width="120" height="120" alt="دراگون‌فلیکس" />
-    <h1>دراگون‌فلیکس</h1>
+    <img src="/logo-256.jpg" width="120" height="120" alt="دراگون فلیکس" />
+    <Brand size="lg" />
     <template v-if="auth.error">
       <p class="alert error">{{ auth.error }}</p>
       <p class="muted">برنامه رو دوباره از داخل تلگرام باز کن.</p>
     </template>
-    <p v-else class="muted">دراگون‌فلیکس یک «مینی‌اپ» تلگرام است و ورود فقط با حساب تلگرام انجام می‌شه. برای رزرو بلیت، از داخل تلگرام بازش کن.</p>
+    <p v-else class="muted">دراگون فلیکس یک «مینی‌اپ» تلگرام است و ورود فقط با حساب تلگرام انجام می‌شه. برای رزرو بلیت، از داخل تلگرام بازش کن.</p>
     <a class="btn lg" :href="botLink" target="_blank" rel="noopener"><Icon name="external" :size="18" /> باز کردن در تلگرام</a>
   </div>
 </template>

@@ -64,7 +64,7 @@ public static class TicketImage
     public static byte[] Render(TicketData t, byte[]? poster)
     {
         var qr = new PngByteQRCode(new QRCodeGenerator().CreateQrCode(t.Code, QRCodeGenerator.ECCLevel.M)).GetGraphic(14);
-        var seatLines = SeatFormat.Lines(t.Seats.Select(s => s.Label));
+        var seatLines = SeatFormat.Lines(t.Seats.Select(s => (s.Row, s.Number)));
 
         var doc = Document.Create(d => d.Page(p =>
         {
@@ -91,9 +91,11 @@ public static class TicketImage
                     row.RelativeItem().AlignMiddle().Column(c =>
                     {
                         c.Spacing(7);
-                        c.Item().Text("دراگون‌فلیکس · بلیت سینما").FontSize(9).FontColor("#93c5fd").SemiBold();
+                        c.Item().Text("دراگون فلیکس · بلیت سینما").FontSize(9).FontColor("#93c5fd").SemiBold();
                         c.Item().Text(t.Movie).FontSize(20).Bold().LineHeight(1.25f);
                         c.Item().Text($"{t.Cinema} · {t.Hall}").FontColor("#bfdbfe");
+                        if (!string.IsNullOrWhiteSpace(t.BuyerName))
+                            c.Item().Text($"نام: {t.BuyerName}").FontSize(11.5f).SemiBold().FontColor("#e0ecff");
 
                         c.Item().PaddingTop(2).Row(r =>
                         {

@@ -32,7 +32,7 @@ onMounted(async () => {
 async function share() {
   const m = data.value.movie
   const url = `${tg.botLink}?start=movie_${m.id}`
-  const r = await tg.shareLink(url, `🎬 ${m.title}${m.specialNote ? ' — ' + m.specialNote : ''}\nبلیت این فیلم رو از دراگون‌فلیکس رزرو کن`)
+  const r = await tg.shareLink(url, `🎬 ${m.title}${m.specialNote ? ' — ' + m.specialNote : ''}\nبلیت این فیلم رو از دراگون فلیکس رزرو کن`)
   tg.haptic.tap()
   if (r === 'copied') toast('لینک فیلم کپی شد.')
   else if (r === 'failed') toast('کپی نشد؛ دوباره امتحان کن.', 'error')

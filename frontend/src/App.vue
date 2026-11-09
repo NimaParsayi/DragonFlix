@@ -5,6 +5,7 @@ import { useRoute } from 'vue-router'
 import { auth } from './lib/auth'
 import UiHost from './components/UiHost.vue'
 import Icon from './components/Icon.vue'
+import Brand from './components/Brand.vue'
 import Skeleton from './components/Skeleton.vue'
 
 const route = useRoute()
@@ -22,7 +23,7 @@ const initial = computed(() => (auth.user?.fullName || '؟').trim().slice(0, 1))
     <div class="container bar">
       <RouterLink to="/" class="brand">
         <img class="logo" src="/logo-96.jpg" width="42" height="42" alt="" />
-        <span>دراگون<b>فلیکس</b></span>
+        <Brand />
       </RouterLink>
 
       <nav v-if="auth.token" class="desk">
@@ -63,7 +64,6 @@ const initial = computed(() => (auth.user?.fullName || '؟').trim().slice(0, 1))
 .top { padding-top: var(--safe-top); position: sticky; top: 0; z-index: 20; background: var(--bg); border-bottom: 1px solid var(--border); }
 .bar { display: flex; align-items: center; gap: 22px; padding-block: 10px; flex-wrap: wrap; }
 .brand { display: inline-flex; align-items: center; gap: 10px; color: var(--text); font-weight: 500; font-size: 1.15rem; }
-.brand b { color: var(--sky); font-weight: 700; }
 .brand:hover { text-decoration: none; }
 .logo { border-radius: 50%; display: block; flex: none; object-fit: cover; }
 nav.desk { display: flex; gap: 4px; flex: 1; }
@@ -84,8 +84,7 @@ nav.desk a.on { background: var(--primary-soft); color: #9cc2ff; }
   /* هدر موبایل فقط برند است؛ ناوبری در نوار شناور پایین */
   .bar { flex-wrap: nowrap; justify-content: space-between; gap: 12px; padding-block: 8px; }
   nav.desk, .name { display: none; }
-  .brand { font-size: 1.05rem; }
-
+  
   /* صفحهٔ اول: هدر شفاف روی اسلایدر (یک بلوک یکپارچه) */
   .top.overlay {
     position: absolute; inset-inline: 0; top: 0; z-index: 25; border-bottom: 0;

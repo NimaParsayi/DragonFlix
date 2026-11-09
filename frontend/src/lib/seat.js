@@ -2,6 +2,9 @@ import { num } from './format'
 
 // «ردیف G - صندلی ۶ و ۷» به‌جای «G6, G7»
 export function parseSeat(label) {
+  const t = String(label).trim()
+  const i = t.lastIndexOf(':') // قالب جدید «ردیف:شماره»؛ بدون ابهام وقتی نام ردیف عدد است
+  if (i >= 0 && /^\d+$/.test(t.slice(i + 1))) return { row: t.slice(0, i), number: Number(t.slice(i + 1)) }
   const m = /^(.*?)(\d+)$/.exec(String(label).trim())
   return m ? { row: m[1], number: Number(m[2]) } : { row: String(label).trim(), number: 0 }
 }

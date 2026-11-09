@@ -44,12 +44,13 @@ async function unfollow(m) {
     <section class="card profile">
       <span class="avatar" aria-hidden="true">{{ me.user.fullName.slice(0, 1) }}</span>
       <div class="grow">
-        <h2>{{ me.user.fullName }}</h2>
+        <h2>{{ me.user.registered ? `${me.user.firstName} ${me.user.lastName}` : me.user.fullName }}</h2>
         <div class="muted small" dir="ltr" style="text-align: start">
           <template v-if="me.user.username">@{{ me.user.username }}</template><template v-else>ID {{ me.user.telegramId }}</template>
         </div>
       </div>
       <span v-if="me.user.role === 'Admin'" class="badge">ادمین</span>
+      <RouterLink to="/register" class="btn secondary sm">{{ me.user.registered ? 'ویرایش نام' : 'ثبت نام' }}</RouterLink>
     </section>
 
     <div v-if="!me.user.botReachable" class="alert error">

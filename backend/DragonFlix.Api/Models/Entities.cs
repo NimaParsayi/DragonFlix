@@ -17,6 +17,14 @@ public class User
     /// <summary>فهرست اعلان‌های دلخواهِ روشن، جداشده با ویرگول. null یعنی تنظیمات پیش‌فرض.</summary>
     public string? NotifyPrefs { get; set; }
     public DateTime? LastLoginAt { get; set; }
+
+    /// <summary>نام و نام خانوادگیِ واقعی که کاربر خودش ثبت می‌کند (روی بلیت چاپ می‌شود)؛ نام تلگرام اینجا جایگزین نمی‌شود.</summary>
+    public string RegFirstName { get; set; } = "";
+    public string RegLastName { get; set; } = "";
+    [System.ComponentModel.DataAnnotations.Schema.NotMapped]
+    public string RegisteredName => (RegFirstName + " " + RegLastName).Trim();
+    [System.ComponentModel.DataAnnotations.Schema.NotMapped]
+    public bool IsRegistered => RegFirstName != "" && RegLastName != "";
 }
 
 public static class Roles

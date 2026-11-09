@@ -56,7 +56,7 @@ public static class Messages
 
     public static string AdminReceipt(Booking b, User u) =>
         "💳 <b>رسید پرداخت جدید</b>\n\n" +
-        $"👤 {E(u.FullName)}" + (u.Username != "" ? $" · @{E(u.Username)}" : "") + "\n" + Header(b) + "\n\n" +
+        $"👤 {E(u.IsRegistered ? u.RegisteredName : u.FullName)}" + (u.Username != "" ? $" · @{E(u.Username)}" : "") + "\n" + Header(b) + "\n\n" +
         $"💰 <b>{PersianFormat.Money(b.TotalPrice)}</b>\n" +
         (b.TrackingCode != "" ? $"🔢 شمارهٔ پیگیری: <code>{E(b.TrackingCode)}</code>\n" : "") +
         (b.PayerCard4 != "" ? $"💳 ۴ رقم آخر کارت پرداخت‌کننده: <code>{E(b.PayerCard4)}</code>\n" : "") +

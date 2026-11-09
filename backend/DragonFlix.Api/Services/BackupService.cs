@@ -177,7 +177,7 @@ public class BackupService(IServiceScopeFactory scopes, IWebHostEnvironment env,
     private static async Task SendToAsync(TelegramApi tg, long chat, List<string> parts, string stamp, long size, DateTime at, string trigger)
     {
         var name = $"dragonflix-backup-{stamp}.zip";
-        var head = $"💾 <b>پشتیبان دراگون‌فلیکس</b>\n🗓 {PersianFormat.Date(at)}  ⏰ {PersianFormat.Time(at)}\n" +
+        var head = $"💾 <b>پشتیبان دراگون فلیکس</b>\n🗓 {PersianFormat.Date(at)}  ⏰ {PersianFormat.Time(at)}\n" +
                    $"حجم: <b>{PersianFormat.Digits(Mb(size))}</b> مگابایت" + (trigger == "auto" ? " · خودکار" : " · دستی");
         if (parts.Count > 1)
             head += $"\n\nفایل به <b>{PersianFormat.Digits(parts.Count.ToString())} بخش</b> تقسیم شده (محدودیت تلگرام). همهٔ بخش‌ها را کنار هم بگذار و یکی کن:\n" +

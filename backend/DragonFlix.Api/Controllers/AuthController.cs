@@ -87,6 +87,6 @@ public class AuthController(AppDbContext db, TokenService tokens, IOptionsMonito
         return user is null ? Unauthorized() : ToDto(user);
     }
 
-    private static UserDto ToDto(User u) => new(u.Id, u.Email, u.FullName, u.Role, u.Username, u.TelegramId);
+    private static UserDto ToDto(User u) => new(u.Id, u.Email, u.FullName, u.Role, u.Username, u.TelegramId, u.RegFirstName, u.RegLastName, u.IsRegistered);
     private AuthResultDto Result(User u) => new(tokens.Create(u), ToDto(u));
 }

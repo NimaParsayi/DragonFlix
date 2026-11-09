@@ -64,7 +64,7 @@ public class BotUpdateHandler(AppDbContext db, TelegramApi tg, AppSettings setti
 
         if (!text.StartsWith('/'))
         {
-            await tg.SendMessageAsync(chatId, "برای استفاده از دراگون‌فلیکس دکمهٔ زیر رو بزن 👇\nراهنما: /help", await OpenMarkupAsync("🎬 باز کردن دراگون‌فلیکس", "/"));
+            await tg.SendMessageAsync(chatId, "برای استفاده از دراگون فلیکس دکمهٔ زیر رو بزن 👇\nراهنما: /help", await OpenMarkupAsync("🎬 باز کردن دراگون فلیکس", "/"));
             return;
         }
 
@@ -75,7 +75,7 @@ public class BotUpdateHandler(AppDbContext db, TelegramApi tg, AppSettings setti
         switch (cmd)
         {
             case "start": await OnStartAsync(chatId, user, arg); break;
-            case "movies": await tg.SendMessageAsync(chatId, "🎬 فیلم‌های روی پرده رو ببین و بلیتت رو بگیر:", await OpenMarkupAsync("🎬 فیلم‌ها", "/")); break;
+            case "movies": await tg.SendMessageAsync(chatId, "🎬 فیلم‌های در حال اکران رو ببین و بلیتت رو بگیر:", await OpenMarkupAsync("🎬 فیلم‌ها", "/")); break;
             case "tickets": await SendTicketsAsync(chatId, user); break;
             case "settings": await SendSettingsAsync(chatId, user); break;
             case "help": await SendHelpAsync(chatId, user); break;
@@ -139,7 +139,7 @@ public class BotUpdateHandler(AppDbContext db, TelegramApi tg, AppSettings setti
 
         var name = E(user.FullName);
         var text =
-            $"🎬 <b>{name} جان، به دراگون‌فلیکس خوش اومدی!</b>\n" +
+            $"🎬 <b>{name} جان، به دراگون فلیکس خوش اومدی!</b>\n" +
             "بلیت سینما رو بدون صف و بدون دردسر رزرو کن.\n\n" +
             "<blockquote>" +
             "۱. فیلم و سانس دلخواهت رو انتخاب کن\n" +
@@ -151,7 +151,7 @@ public class BotUpdateHandler(AppDbContext db, TelegramApi tg, AppSettings setti
             "👇 برای شروع، دکمهٔ زیر رو بزن.";
 
         var rows = new List<object[]>();
-        if (await notify.WebButtonAsync("🎬 باز کردن دراگون‌فلیکس", path, "primary") is { } open) rows.Add([open]);
+        if (await notify.WebButtonAsync("🎬 باز کردن دراگون فلیکس", path, "primary") is { } open) rows.Add([open]);
         rows.Add([Kb.Cb("🔔 تنظیم اعلان‌ها", "st:open")]);
         if (rows.Count == 1 && !await HasAppUrlAsync())
             text += "\n\n⚠️ مینی‌اپ هنوز راه نیفتاده" + (IsAdmin(user) ? " (آدرس HTTPS رو توی پنل ← تنظیمات ثبت کن)." : "؛ یکم دیگه دوباره امتحان کن.");
@@ -163,11 +163,11 @@ public class BotUpdateHandler(AppDbContext db, TelegramApi tg, AppSettings setti
     private async Task SendHelpAsync(long chatId, User user)
     {
         var text = "📖 <b>راهنما</b>\n\n" +
-                   "/movies — فیلم‌های روی پرده\n/tickets — بلیت‌های من\n/settings — انتخاب اعلان‌ها\n\n" +
+                   "/movies — فیلم‌های در حال اکران\n/tickets — بلیت‌های من\n/settings — انتخاب اعلان‌ها\n\n" +
                    "<blockquote expandable>💳 پرداخت کارت‌به‌کارته: بعد از انتخاب صندلی، مبلغ رو به کارتی که نشون داده می‌شه واریز کن و رسیدش رو بفرست. " +
                    "بعد از تأیید مدیر، بلیت QRدارت همین‌جا برات میاد.</blockquote>" +
                    (IsAdmin(user) ? "\n\n👑 <b>ادمین:</b>\n/pending — رسیدهای در انتظار\n/stats — آمار امروز\n/backup — دریافت پشتیبان" : "");
-        await tg.SendMessageAsync(chatId, text, await OpenMarkupAsync("🎬 باز کردن دراگون‌فلیکس", "/"));
+        await tg.SendMessageAsync(chatId, text, await OpenMarkupAsync("🎬 باز کردن دراگون فلیکس", "/"));
     }
 
     private async Task SendTicketsAsync(long chatId, User user)

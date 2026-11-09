@@ -4,7 +4,9 @@ namespace DragonFlix.Api.Dtos;
 
 public record RegisterDto([Required, EmailAddress] string Email, [Required, MinLength(6)] string Password, [Required] string FullName);
 public record LoginDto([Required] string Email, [Required] string Password);
-public record UserDto(int Id, string Email, string FullName, string Role, string Username = "", long? TelegramId = null);
+public record UserDto(int Id, string Email, string FullName, string Role, string Username = "", long? TelegramId = null,
+    string FirstName = "", string LastName = "", bool Registered = false);
+public record ProfileDto(string? FirstName, string? LastName);
 public record TelegramLoginDto([Required] string InitData);
 public record NotifyPrefsDto(List<string> Enabled);
 public record AuthResultDto(string Token, UserDto User);

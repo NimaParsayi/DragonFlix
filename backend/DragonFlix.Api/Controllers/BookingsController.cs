@@ -35,6 +35,7 @@ public class BookingsController(AppDbContext db, AppSettings settings, PaymentSe
                 movie = b.Showtime.Movie.Title,
                 cinema = b.Showtime.Hall!.Cinema!.Name,
                 hall = b.Showtime.Hall.Name,
+                buyer = b.User!.RegFirstName + " " + b.User.RegLastName,
                 seats = b.Seats.OrderBy(s => s.SeatRow!.SortOrder).ThenBy(s => s.SeatNumber)
                     .Select(s => new { row = s.SeatRow!.Label, number = s.SeatNumber, s.Price })
             }).ToListAsync();
@@ -54,6 +55,10 @@ public class BookingsController(AppDbContext db, AppSettings settings, PaymentSe
             return BadRequest(new { message = $"حداکثر {MaxSeatsPerBooking} صندلی در هر رزرو مجاز است." });
         if (dto.Seats.Select(s => (s.RowId, s.Number)).Distinct().Count() != dto.Seats.Count)
             return BadRequest(new { message = "صندلی تکراری انتخاب شده است." });
+
+        var me = await db.Users.FindAsync(User.GetUserId());
+        if (me is null || !me.IsRegistered)
+            return StatusCode(403, new { code = "profile_required", message = "قبل از رزرو باید نام و نام خانوادگیت رو ثبت کنی." });
 
         var pay = await settings.GetPaymentAsync();
         if (!pay.Configured)
@@ -88,7 +93,7 @@ public class BookingsController(AppDbContext db, AppSettings settings, PaymentSe
         }
         booking.TotalPrice = booking.Seats.Sum(s => s.Price);
         booking.SeatsText = string.Join(",", dto.Seats
-            .Select(s => (Row: rows[s.RowId], s.Number)).OrderBy(x => x.Row.SortOrder).ThenBy(x => x.Number).Select(x => $"{x.Row.Label}{x.Number}"));
+            .Select(s => (Row: rows[s.RowId], s.Number)).OrderBy(x => x.Row.SortOrder).ThenBy(x => x.Number).Select(x => $"{x.Row.Label}:{x.Number}"));
 
         // بررسی سریع؛ تضمین نهایی با ایندکس یکتا روی (سانس، ردیف، شماره) است.
         var ids = dto.Seats.Select(s => s.RowId).Distinct().ToList();
@@ -134,6 +139,7 @@ public class BookingsController(AppDbContext db, AppSettings settings, PaymentSe
             startsAt = b.Showtime!.StartsAt, movie = b.Showtime.Movie!.Title, movieId = b.Showtime.MovieId,
             genre = b.Showtime.Movie.Genre, posterUrl = b.Showtime.Movie.PosterUrl,
             cinema = b.Showtime.Hall!.Cinema!.Name, hall = b.Showtime.Hall.Name,
+            buyer = b.User!.RegisteredName,
             seats = b.Seats.OrderBy(s => s.SeatRow!.SortOrder).ThenBy(s => s.SeatNumber)
                 .Select(s => new { row = s.SeatRow!.Label, number = s.SeatNumber, s.Price })
         });
@@ -226,9 +232,9 @@ public class BookingsController(AppDbContext db, AppSettings settings, PaymentSe
 
     public static TicketData ToTicket(Booking b) => new(
         b.Code, b.Showtime!.Movie!.Title, b.Showtime.Hall!.Cinema!.Name, b.Showtime.Hall.Name,
-        b.Showtime.StartsAt, b.User!.FullName, b.TotalPrice, b.CreatedAt,
+        b.Showtime.StartsAt, b.User!.IsRegistered ? b.User.RegisteredName : b.User.FullName, b.TotalPrice, b.CreatedAt,
         b.Seats.OrderBy(s => s.SeatRow!.SortOrder).ThenBy(s => s.SeatNumber)
-            .Select(s => new TicketSeat($"{s.SeatRow!.Label}{s.SeatNumber}", s.Price)).ToList(), b.Showtime.Movie.PosterUrl);
+            .Select(s => new TicketSeat(s.SeatRow!.Label, s.SeatNumber, s.Price)).ToList(), b.Showtime.Movie.PosterUrl);
 
     private async Task<Booking?> Load(int id)
     {

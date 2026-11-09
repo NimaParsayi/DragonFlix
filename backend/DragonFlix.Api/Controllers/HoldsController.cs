@@ -22,6 +22,10 @@ public class HoldsController(AppDbContext db) : ControllerBase
     [HttpPut]
     public async Task<IActionResult> Put(int id, HoldRequestDto dto)
     {
+        var me = await db.Users.FindAsync(User.GetUserId());
+        if (me is null || !me.IsRegistered)
+            return StatusCode(403, new { code = "profile_required", message = "قبل از رزرو باید نام و نام خانوادگیت رو ثبت کنی." });
+
         var seats = (dto.Seats ?? new()).DistinctBy(s => (s.RowId, s.Number)).ToList();
         if (seats.Count > MaxSeats)
             return BadRequest(new { message = $"حداکثر {MaxSeats} صندلی قابل انتخاب است." });

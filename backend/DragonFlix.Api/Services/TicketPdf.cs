@@ -6,7 +6,7 @@ using QuestPDF.Infrastructure;
 
 namespace DragonFlix.Api.Services;
 
-public record TicketSeat(string Label, decimal Price);
+public record TicketSeat(string Row, int Number, decimal Price);
 
 public record TicketData(
     string Code, string Movie, string Cinema, string Hall, DateTime StartsAt,
@@ -56,7 +56,7 @@ public static class TicketPdf
                 // سربرگ
                 col.Item().Background(Blue).CornerRadius(8).PaddingVertical(12).PaddingHorizontal(16).Row(r =>
                 {
-                    r.RelativeItem().Text("دراگون‌فلیکس").Bold().FontSize(16).FontColor(Colors.White);
+                    r.RelativeItem().Text("دراگون فلیکس").Bold().FontSize(16).FontColor(Colors.White);
                     r.AutoItem().AlignMiddle().Text("بلیت سینما").FontColor("#bfdbfe");
                 });
 
@@ -87,9 +87,8 @@ public static class TicketPdf
                     });
                     foreach (var s in t.Seats)
                     {
-                        var (sr, sn) = SeatFormat.Parse(s.Label);
-                        table.Cell().Element(Body).Text(sr).Bold();
-                        table.Cell().Element(Body).Text(PersianFormat.Digits(sn.ToString())).Bold();
+                        table.Cell().Element(Body).Text(s.Row).Bold();
+                        table.Cell().Element(Body).Text(PersianFormat.Digits(s.Number.ToString())).Bold();
                         table.Cell().Element(Body).Text(PersianFormat.Money(s.Price));
                     }
                     table.Cell().Element(Total).Text("جمع کل").Bold();

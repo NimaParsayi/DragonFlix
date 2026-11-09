@@ -1,6 +1,6 @@
 <script setup>
 import Skeleton from '../components/Skeleton.vue'
-import { seatLines } from '../lib/seat'
+import { seatLines, parseSeat } from '../lib/seat'
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import PosterArt from '../components/PosterArt.vue'
@@ -51,8 +51,8 @@ const STATUS = {
   Cancelled: { label: 'لغوشده', cls: 'mute' },
 }
 const isPast = (b) => new Date(b.startsAt) <= new Date()
-const seatsOf = (b) => (b.seats?.length ? b.seats.map((s) => `${s.row}${s.number}`) : (b.seatsText || '').split(',').filter(Boolean))
-const withSeats = (b) => ({ ...b, seats: b.seats?.length ? b.seats : seatsOf(b).map((x) => ({ row: x.replace(/\d+$/, ''), number: Number(x.match(/\d+$/)?.[0]) })) })
+const seatsOf = (b) => (b.seats?.length ? b.seats.map((s) => `${s.row}:${s.number}`) : (b.seatsText || '').split(',').filter(Boolean))
+const withSeats = (b) => ({ ...b, seats: b.seats?.length ? b.seats : seatsOf(b).map(parseSeat) })
 
 const groups = computed(() => {
   const all = list.value ?? []

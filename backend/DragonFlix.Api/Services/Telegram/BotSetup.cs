@@ -8,18 +8,18 @@ namespace DragonFlix.Api.Services.Telegram;
 /// <summary>پیکربندی ظاهر ربات: نام، توضیح، لوگو، فرمان‌ها (جدا برای ادمین) و دکمهٔ منوی مینی‌اپ.</summary>
 public class BotSetup(TelegramApi tg, AppSettings settings, AppDbContext db, IWebHostEnvironment env, ILogger<BotSetup> log)
 {
-    public const string BotName = "دراگون‌فلیکس | DragonFlix";
+    public const string BotName = "دراگون فلیکس | DragonFlix";
     private const string ShortDescription = "رزرو آنلاین بلیت سینما با انتخاب صندلی، پرداخت کارت‌به‌کارت و بلیت QR 🎟";
     private const string Description =
-        "🎬 دراگون‌فلیکس؛ رزرو آنلاین بلیت سینما\n\n" +
+        "🎬 دراگون فلیکس؛ رزرو آنلاین بلیت سینما\n\n" +
         "فیلم و سانس دلخواهت رو انتخاب کن، صندلی‌ات رو روی نقشهٔ سالن بزن، کارت‌به‌کارت پرداخت کن و بلیت QRدار رو همین‌جا تحویل بگیر.\n\n" +
         "🔔 یادآوری سانس، خبر اکران فیلم‌های جدید و سانس‌های تازه — همه داخل تلگرام.\n\n" +
         "برای شروع «Start» رو بزن 👇";
 
     private static readonly object[] UserCommands =
     [
-        new { Command = "start", Description = "شروع و باز کردن دراگون‌فلیکس" },
-        new { Command = "movies", Description = "فیلم‌های روی پرده" },
+        new { Command = "start", Description = "شروع و باز کردن دراگون فلیکس" },
+        new { Command = "movies", Description = "فیلم‌های در حال اکران" },
         new { Command = "tickets", Description = "بلیت‌های من" },
         new { Command = "settings", Description = "انتخاب اعلان‌هایی که می‌خواهم" },
         new { Command = "help", Description = "راهنما" },
@@ -60,7 +60,7 @@ public class BotSetup(TelegramApi tg, AppSettings settings, AppDbContext db, IWe
     {
         var url = await settings.GetWebAppUrlAsync();
         return url.StartsWith("https://", StringComparison.OrdinalIgnoreCase)
-            ? new { Type = "web_app", Text = "🎬 دراگون‌فلیکس", WebApp = new { Url = url } }
+            ? new { Type = "web_app", Text = "🎬 دراگون فلیکس", WebApp = new { Url = url } }
             : new { Type = "commands" };
     }
 

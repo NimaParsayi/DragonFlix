@@ -6,6 +6,7 @@ const routes = [
   { path: '/', name: 'home', component: () => import('./views/HomeView.vue'), meta: { root: true } },
   { path: '/movies/:id', name: 'movie', component: () => import('./views/MovieView.vue'), props: true },
   { path: '/showtimes/:id', name: 'booking', component: () => import('./views/BookingView.vue'), props: true, meta: { flow: true } },
+  { path: '/register', name: 'register', component: () => import('./views/RegisterView.vue') },
   { path: '/gate', name: 'gate', component: () => import('./views/GateView.vue') },
   { path: '/login', redirect: { name: 'gate' } },
   { path: '/pay/:id', name: 'pay', component: () => import('./views/PayView.vue'), props: true, meta: { flow: true } },
@@ -46,6 +47,8 @@ router.beforeEach(async (to) => {
   await auth.whenReady()
   if (!auth.token) return to.name === 'gate' ? true : { name: 'gate' }
   if (to.name === 'gate') return { name: 'home' }
+  // بدون ثبت نام و نام خانوادگی اجازهٔ رزرو نیست
+  if (to.meta.flow && !auth.user?.registered) return { name: 'register', query: { next: to.fullPath } }
   if (to.meta.admin && !auth.isAdmin) return { name: 'home' }
 })
 

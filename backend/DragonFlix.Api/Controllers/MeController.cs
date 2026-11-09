@@ -20,9 +20,30 @@ public class MeController(AppDbContext db) : ControllerBase
         var on = NotificationCategories.EnabledOptional(u);
         return Ok(new
         {
-            user = new { u.Id, u.FullName, u.Username, u.TelegramId, u.Role, botReachable = !u.BotBlocked },
+            user = new { u.Id, u.FullName, u.Username, u.TelegramId, u.Role, botReachable = !u.BotBlocked, firstName = u.RegFirstName, lastName = u.RegLastName, registered = u.IsRegistered },
             categories = NotificationCategories.All.Select(c => new { c.Key, c.Title, c.Description, c.Mandatory, enabled = c.Mandatory || on.Contains(c.Key) }),
         });
+    }
+
+    private static readonly System.Text.RegularExpressions.Regex NameRx = new(@"^[\p{L}\p{M}][\p{L}\p{M} \u200c'\-]*$");
+
+    /// <summary>ثبت نام و نام خانوادگی؛ بدون آن رزرو بلیت ممکن نیست و روی بلیت چاپ می‌شود.</summary>
+    [HttpPut("api/me/profile")]
+    public async Task<IActionResult> SetProfile(ProfileDto dto)
+    {
+        static string Clean(string? s) => System.Text.RegularExpressions.Regex.Replace((s ?? "").Trim(), @"\s+", " ");
+        var first = Clean(dto.FirstName); var last = Clean(dto.LastName);
+        if (first.Length < 2 || last.Length < 2)
+            return BadRequest(new { message = "نام و نام خانوادگی رو کامل وارد کن (حداقل ۲ حرف)." });
+        if (first.Length > 30 || last.Length > 40)
+            return BadRequest(new { message = "نام یا نام خانوادگی خیلی طولانیه." });
+        if (!NameRx.IsMatch(first) || !NameRx.IsMatch(last))
+            return BadRequest(new { message = "نام و نام خانوادگی فقط می‌تونه شامل حروف باشه." });
+        var u = await db.Users.FindAsync(User.GetUserId());
+        if (u is null) return Unauthorized();
+        u.RegFirstName = first; u.RegLastName = last;
+        await db.SaveChangesAsync();
+        return Ok(new { firstName = first, lastName = last, registered = true });
     }
 
     /// <summary>فهرست دسته‌های دلخواهِ روشن را ذخیره می‌کند؛ دسته‌های ضروری همیشه روشن‌اند و نادیده گرفته می‌شوند.</summary>

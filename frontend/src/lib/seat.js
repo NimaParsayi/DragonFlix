@@ -1,5 +1,8 @@
 import { num } from './format'
 
+// ارقام لاتین داخل نام ردیف هم فارسی شوند
+export const faDigits = (s) => String(s).replace(/\d/g, (d) => '۰۱۲۳۴۵۶۷۸۹'[d])
+
 // «ردیف G - صندلی ۶ و ۷» به‌جای «G6, G7»
 export function parseSeat(label) {
   const t = String(label).trim()
@@ -21,7 +24,7 @@ export function seatLines(seats) {
     ns.sort((a, b) => a - b)
     const f = ns.map((n) => num(n))
     const list = f.length === 1 ? f[0] : f.slice(0, -1).join('، ') + ' و ' + f[f.length - 1]
-    return `ردیف ${row} - ${f.length === 1 ? 'صندلی' : 'صندلی‌های'} ${list}`
+    return `ردیف ${faDigits(row)} - ${f.length === 1 ? 'صندلی' : 'صندلی‌های'} ${list}`
   })
 }
 
@@ -29,5 +32,5 @@ export const seatsFromText = (t) => (t || '').split(',').filter(Boolean)
 
 export function seatOne(s) {
   const { row, number } = typeof s === 'string' ? parseSeat(s) : s
-  return `ردیف ${row} - صندلی ${num(number)}`
+  return `ردیف ${faDigits(row)} - صندلی ${num(number)}`
 }

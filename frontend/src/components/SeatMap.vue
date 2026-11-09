@@ -3,6 +3,7 @@ import { computed, ref, nextTick, onMounted, onBeforeUnmount } from 'vue'
 import Icon from './Icon.vue'
 import SeatRowStrip from './SeatRowStrip.vue'
 import { money, num } from '../lib/format'
+import { faDigits } from '../lib/seat'
 import { SEAT_STATUS, SEAT_HINT, seatStatus } from '../lib/seats'
 
 const props = defineProps({
@@ -157,7 +158,7 @@ onBeforeUnmount(() => { document.removeEventListener('pointerdown', outside); cl
 
     <Transition name="tip">
       <div v-if="tipData" class="tip" :class="[{ below: tip.below }, tipData.status]" :style="{ left: tip.x + 'px', top: tip.y + 'px' }" role="status">
-        <div class="seatname">ردیف {{ tipData.row.label }} · صندلی {{ num(tipData.n) }}</div>
+        <div class="seatname">ردیف {{ faDigits(tipData.row.label) }} · صندلی {{ num(tipData.n) }}</div>
         <div class="state"><i class="dot" />{{ SEAT_STATUS[tipData.status] }}</div>
         <div v-if="tipData.status !== 'disabled'" class="price">{{ money(tipData.row.price) }}</div>
         <div v-if="mode === 'select'" class="hint">{{ SEAT_HINT[tipData.status] }}</div>

@@ -87,7 +87,7 @@ public static class TicketPdf
                     });
                     foreach (var s in t.Seats)
                     {
-                        table.Cell().Element(Body).Text(s.Row).Bold();
+                        table.Cell().Element(Body).Text(PersianFormat.Digits(s.Row)).Bold();
                         table.Cell().Element(Body).Text(PersianFormat.Digits(s.Number.ToString())).Bold();
                         table.Cell().Element(Body).Text(PersianFormat.Money(s.Price));
                     }

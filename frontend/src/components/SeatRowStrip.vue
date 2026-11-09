@@ -1,6 +1,8 @@
 <script setup>
 import { computed } from 'vue'
 import { SEAT_STATUS, seatStatus } from '../lib/seats'
+import { faDigits } from '../lib/seat'
+import { num } from '../lib/format'
 
 // mode: 'select' (رزرو)، 'view' (فقط نمایش)، 'edit' (طراح چینش: کلیک روی صندلی = غیرفعال/فعال، کلیک روی فاصله = راهرو)
 const props = defineProps({
@@ -28,7 +30,7 @@ const focus = (n, e) => { if (props.mode !== 'edit' && e.currentTarget.matches('
 
 <template>
   <div class="strip" :class="`t${Math.min(tier, 3)}`">
-    <span class="label">{{ row.label }}</span>
+    <span class="label">{{ faDigits(row.label) }}</span>
     <div class="seats">
       <span class="indent" :style="{ width: `calc(var(--seat-step) * ${offset})` }" />
       <template v-for="n in count" :key="n">
@@ -36,7 +38,7 @@ const focus = (n, e) => { if (props.mode !== 'edit' && e.currentTarget.matches('
           type="button"
           class="seat"
           :class="[state(n), { edit: mode === 'edit', view: mode === 'view' }]"
-          :aria-label="`ردیف ${row.label} صندلی ${n} — ${SEAT_STATUS[state(n)]}`"
+          :aria-label="`ردیف ${faDigits(row.label)} صندلی ${num(n)} — ${SEAT_STATUS[state(n)]}`"
           :aria-pressed="mode === 'select' ? state(n) === 'selected' : undefined"
           :aria-disabled="mode === 'select' && !['free', 'selected'].includes(state(n))"
           :title="mode === 'edit' ? (state(n) === 'disabled' ? 'فعال‌کردن صندلی' : 'غیرفعال‌کردن صندلی') : undefined"
@@ -45,7 +47,7 @@ const focus = (n, e) => { if (props.mode !== 'edit' && e.currentTarget.matches('
           @pointerleave="leave"
           @focus="focus(n, $event)"
           @blur="emit('leave')"
-        >{{ n }}</button>
+        >{{ num(n).replace(/٬/g, '') }}</button>
         <template v-if="n < count">
           <button
             v-if="mode === 'edit'"
@@ -60,7 +62,7 @@ const focus = (n, e) => { if (props.mode !== 'edit' && e.currentTarget.matches('
         </template>
       </template>
     </div>
-    <span class="label end">{{ row.label }}</span>
+    <span class="label end">{{ faDigits(row.label) }}</span>
   </div>
 </template>
 
@@ -68,7 +70,7 @@ const focus = (n, e) => { if (props.mode !== 'edit' && e.currentTarget.matches('
 .strip {
   --seat: var(--sm-seat, clamp(22px, calc((100cqw - 64px - var(--aisles, 0) * 22px - var(--cols, 10) * 4px) / var(--cols, 10)), 28px));
   --seat-step: calc(var(--seat) + 4px);
-  display: flex; align-items: center; gap: 10px; direction: ltr; width: 100%;
+  display: flex; align-items: center; gap: 10px; direction: rtl; width: 100%;
 }
 .label { width: 20px; text-align: center; font-weight: 700; color: var(--muted); font-size: .85rem; }
 .seats { display: flex; align-items: center; flex: 1; }

@@ -4,6 +4,7 @@ import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import Modal from '../../components/Modal.vue'
 import Icon from '../../components/Icon.vue'
+import JalaliDateTime from '../../components/JalaliDateTime.vue'
 import { api } from '../../lib/api'
 import { toast, confirmDialog } from '../../lib/ui'
 import { num, fmtDate, fmtTime, dayKey, toInputValue } from '../../lib/format'
@@ -167,7 +168,7 @@ const pct = (s) => (s.capacity ? Math.min(100, Math.round((s.bookedSeats / s.cap
         </select>
       </label>
       <label class="field">زمان شروع
-        <input v-model="form.startsAt" type="datetime-local" required dir="ltr" />
+        <JalaliDateTime v-model="form.startsAt" required />
         <span v-if="endsAt" class="field-hint">پایان تقریبی: {{ endsAt }} (با ۱۵ دقیقه پاک‌سازی سالن)</span>
       </label>
 

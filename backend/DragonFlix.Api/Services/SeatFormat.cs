@@ -37,7 +37,7 @@ public static partial class SeatFormat
         {
             var nums = g.Nums.Order().Select(n => PersianFormat.Digits(n.ToString())).ToList();
             var list = nums.Count == 1 ? nums[0] : string.Join("، ", nums.Take(nums.Count - 1)) + " و " + nums[^1];
-            return $"ردیف {g.Row} - {(nums.Count == 1 ? "صندلی" : "صندلی‌های")} {list}";
+            return $"ردیف {PersianFormat.Digits(g.Row)} - {(nums.Count == 1 ? "صندلی" : "صندلی‌های")} {list}";
         }).ToList();
     }
 
